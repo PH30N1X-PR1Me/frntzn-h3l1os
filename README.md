@@ -1,97 +1,112 @@
 # MendOS
 
-> Self-service IT diagnostic & remediation tool for Windows and macOS.
-> One-line install. Vendor-neutral. Open source.
+### MEND your Operating System. One line. Windows or Mac.
 
-[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-blue)]()
-[![macOS](https://img.shields.io/badge/macOS-12%2B-blue)]()
-[![License](https://img.shields.io/badge/license-MIT-green)]()
-[![Version](https://img.shields.io/badge/version-1.0.0-orange)]()
+```powershell
+irm 'https://mendos.heliosprima.com/win' | iex
+```
+
+```bash
+/bin/bash -c "$(curl -fsSL https://mendos.heliosprima.com/mac)"
+```
+
+> *A [Helios Prima](https://heliosprima.com) product. The DNA-helix that repairs your operating system.*
 
 ---
 
-## What it does
+## Why this exists
 
-MendOS is a free, open-source tool that helps non-technical users diagnose and fix common IT problems on their own — DNS issues, audio glitches, Bluetooth pairing, slow performance, browser cache problems, MFA loops, printer offline, and more — without waiting for IT.
+There's a moment every computer user knows. Something breaks — the audio cuts out, the WiFi won't reconnect, the printer says it's offline even though it's clearly on, Okta won't stop asking for verification — and you suddenly have to become a person you're not. You're a graphic designer. You're a parent on a video call. You're a salesperson trying to close a deal. You're a retiree video-chatting your grandkids. You didn't sign up to learn what a DNS cache is or why the print spooler service crashed.
 
-Built for call centers, BPOs, MSPs, and anyone who runs IT support at scale. Particularly tuned for **low-end hardware** (Celeron N4500-class machines with 4–8 GB RAM) where every gram of optimization matters.
+So you call someone. Maybe it's your company's IT desk. Maybe it's your son who lives three states away. Maybe it's the 1-800 number on the back of the laptop, which routes you to a script-reading agent halfway around the world. You go on hold. When someone picks up, you try to describe a screen they can't see. They ask you to read error messages out loud. They ask you to right-click things and you don't know which right is right. Maybe they fix it. Maybe they escalate. Maybe they tell you to restart, and you do, and it doesn't help, and you have to start over.
 
-## Quick start
+It shouldn't be this hard. Most of what tech support does on the other end of that call is the same handful of commands, over and over: clear a cache, flush DNS, restart a service, sign out and back in, toggle a setting. They've memorized the playbook. You haven't. That's the whole gap.
 
-### Windows (PowerShell)
+**MendOS closes the gap.** It hands you the playbook in a window with buttons. You paste one line. A scanner runs. It tells you, in plain language, what's wrong. You click Fix. It fixes it. No phone call, no hold music, no ticket, no waiting.
 
-```powershell
-irm 'https://raw.githubusercontent.com/PH30N1X-PR1Me/frntzn-h3l1os/v1.0.0/src/windows/h3l1os.ps1' | iex
-```
+## The name
 
-UAC will prompt for elevation. After that, the tool runs.
+**Mend**OS — written with **Mend** in bold and OS in light, like the helix of your operating system has two strands that need to align. When something breaks, MendOS reads the strands, finds the broken segment, and stitches it back together. Your OS isn't a black box you have to apologize to; it's a structure you can read and repair.
 
-### macOS (Terminal)
+The name has two parts:
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/PH30N1X-PR1Me/frntzn-h3l1os/v1.0.0/src/mac/h3l1os.sh)"
-```
+- **Mend** — the action. To repair, to heal, to make whole again.
+- **OS** — the thing being mended. Your operating system. Your daily-driver computer. The reason you can't get your work done right now.
 
-You'll be prompted for your admin password only when a fix needs it.
+Pronounced *mend-OH-S*. Built by [FR4NTZ0N](https://github.com/PH30N1X-PR1Me), shipped under [Helios Prima](https://heliosprima.com).
 
-*Hybrid hosting: scripts on GitHub raw (versioned, auditable), license + telemetry API on Cloudflare Worker. See [`cloudflare/DEPLOY.md`](cloudflare/DEPLOY.md).*
+## Who it's for
 
-## Features
+**The parent or grandparent** who calls a family member every time something goes wrong, and feels guilty about it. You shouldn't have to feel guilty. Run the one-liner, click the issue, click Fix. If it doesn't work, the tool exports a diagnostic file your tech-savvy relative can actually read.
 
-| | Light (free) | Ultimate ($29–49/yr) |
+**The student or freelancer** whose laptop is everything — coursework, income, social life, panic at 2am the night before a deadline when Chrome won't load. You're not going to wait for IT to open in the morning. You need the fix now, free, no install, no signup.
+
+**The small business owner** running a five-person shop without a real IT team. You ARE the IT team, except you also have a business to run. Stop spending Saturday morning fixing what should be a five-minute click.
+
+**The IT pro running help desk operations** at a real company. You know the truth: most of your tickets are the same fifty things. You don't have time for them. You have actual problems to solve. Hand your users this tool with your branding on it, and watch your ticket queue drop overnight.
+
+## Where this came from
+
+I work in tech support. I started as a regular agent — not the most technically inclined person on the floor — and got promoted into the technical side because I was good at staying calm with frustrated people. The job put me in a position where I had to fix things I barely understood myself, walking users through PowerShell commands to clear cache, flush DNS, reset services, while they were already stressed and short on patience.
+
+Trying to explain *"open PowerShell as an administrator and paste this exact command"* to someone who's never seen a black window with white text before — that's a uniquely demoralizing experience for both of you. They feel stupid. You feel useless. The actual fix takes thirty seconds and the call takes thirty minutes.
+
+I built MendOS so the people I was helping could help themselves. Then I realized the same script could help anyone, anywhere — not just the agents on my floor. So here it is, open source, free for personal use, and built to grow.
+
+## What it does today
+
+One paste, one window, one click per fix. Specifically:
+
+- **Health scan** — checks 7 things on Windows / 6 on Mac in under two seconds: uptime, free disk, RAM pressure, days since last security patch, network connectivity, hibernation state, fast startup. Green / yellow / red dots tell you what's healthy and what isn't.
+- **22 single-shot fixes** across **12 categories** — DNS flush, audio reset, Bluetooth restart, print spooler, Chrome/Edge cache clear, Slack/Zoom/Teams reset, Okta MFA helper, low-end performance tuning, external monitor re-detection, Outlook repair, WiFi adapter cycle, and more.
+- **Search-as-you-type problem picker** — don't see your issue in the dropdown? Type "headphones," "stuck," "frozen," "won't connect" — keyword search across all 22 problems with a live match counter.
+- **Audit Mode** — toggle in the header. The tool runs all checks but disables every fix button, just shows you what *would* happen. Perfect for users who want to learn what's wrong without changing anything yet.
+- **Undo Last** — every fix that changes a setting gets registered with its inverse. One click reverts the last action. The undo registry persists across launches.
+- **Escalate to IT** — when a fix doesn't work, click Escalate. The tool zips up your system info, recent logs, what was tried, and what failed, drops it on your Desktop, and opens an email pre-addressed to your support contact with the ZIP path on your clipboard. The hardest part of asking for help (explaining what's going on) becomes a single click.
+
+## What's coming
+
+This is a v1.0 release. Honest about what's still rough:
+
+- Right now you need to paste a command into PowerShell or Terminal. That's already easier than the old workflow for many people, but **a downloadable installer (`.exe` for Windows, signed `.app` for Mac)** is on the roadmap so your less-technical relatives don't have to know what PowerShell is.
+- The fix descriptions are still a little technical. **Plain-English mode** — "this clears your computer's memory of websites it visited so they load fresh next time" instead of "Remove-Item LOCALAPPDATA\Google\Chrome\Cache" — is coming.
+- A **"Fix the safe stuff automatically"** big-button mode for people who don't want to read 22 issue descriptions.
+- **Scheduled scans** that catch problems before you notice them.
+- **Multi-language UI** — Spanish, Tagalog, Hindi, Portuguese — for global use.
+- **MSP / IT-team mode** with custom branding, multi-step workflows, MDM/Group-Policy awareness, ticket system integrations (Freshdesk, Zendesk, ServiceNow).
+- **Driver, battery, and thermal health** checks for laptops.
+- **Browser deep-cleaners** that reset Chrome/Edge/Firefox profiles without losing bookmarks or saved logins.
+
+If something on this list matters to you and you can help build it, **please open an issue or a PR.** This tool gets stronger every time someone adds a fix to the registry, translates a string file, or files a bug report with a real-world scenario. The code is structured to make contributing easy — adding a new fix is about 15 lines of PowerShell or bash. See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
+
+## Two tiers
+
+| | Light (free) | Ultimate |
 |---|:---:|:---:|
-| Health scan (CPU, RAM, disk, network, updates) | ✅ | ✅ |
-| Single-shot fixes (DNS flush, audio reset, etc.) | ✅ | ✅ |
-| Problem picker with smart search | ✅ | ✅ |
-| Audit mode (preview without changes) | ✅ | ✅ |
-| Undo last action | ✅ | ✅ |
-| Diagnostic bundle export for IT | ✅ | ✅ |
+| Health scan | ✅ | ✅ |
+| 22 single-shot fixes | ✅ | ✅ |
+| Audit mode | ✅ | ✅ |
+| Undo every action | ✅ | ✅ |
+| Diagnostic bundle export | ✅ | ✅ |
 | Multi-step verified workflows | — | ✅ |
-| Low-end system optimization | — | ✅ |
-| Network stack reset | — | ✅ |
-| Multi-language (es, tl, hi) | — | ✅ |
+| Per-machine license binding | — | ✅ |
+| MDM / Group Policy awareness | — | ✅ |
+| Multi-language UI | — | ✅ |
 | Custom branding via config.json | — | ✅ |
-| MDM/Group Policy awareness | — | ✅ |
-| ITSM integrations (Freshdesk/Zendesk/ServiceNow) | — | ✅ |
+| ITSM integrations | — | ✅ |
 
-## What it covers
+Light is fully MIT-licensed and always free for personal use. Ultimate is for organizations that need workflows, branding, and integrations — pricing TBD, contact me for early access.
 
-12 categories of common IT issues:
+## For organizations
 
-1. **Identity / SSO / MFA** — Okta loops, MFA push not arriving, account locked
-2. **Audio** — Logitech double-mute, no sound, mic not working
-3. **Communication apps** — Slack blank, Zoom crash, Teams login loop
-4. **Browser** — Chrome cache, Edge cache, slow pages
-5. **Network** — DNS failures, WiFi disconnects
-6. **Hardware** — Bluetooth, camera, USB
-7. **Performance** — slow startup, low-end optimization, high RAM
-8. **Updates** — stuck installs, reset Windows Update
-9. **Display** — external monitors not detected
-10. **Email** — Outlook stuck syncing
-11. **Print** — spooler crashed, "offline" stuck
-12. **OS / Account / Profile** — sign-in, storage cleanup
+If you run a call center, a clinic, a small business, an MSP, or any operation where people spend their day on things other than computer troubleshooting — MendOS was built with you in mind too.
 
-## Security & trust
-
-This tool runs with admin privileges and modifies system state. **Read [SECURITY.md](docs/SECURITY.md) before running it on a managed corporate machine.**
-
-Highlights:
-- **Open source.** Every line readable. No obfuscation, no Base64 blobs.
-- **AMSI stays on.** We never disable, bypass, or manipulate Windows Defender.
-- **Every change is reversible.** Undo registry tracks every modification.
-- **Restore point before risky workflows** (Windows).
-- **No telemetry by default.** Opt-in only. Strictly local logs.
-- **No keylogging, clipboard reading, or credential capture. Ever.**
-- **Policy-aware.** Refuses to override settings managed by Group Policy or MDM.
-
-## For MSPs / IT teams
-
-Deploy with custom branding via `config.json`:
+Drop a `config.json` into the user's profile (or push it via Group Policy / Intune / Jamf) and the tool reskins itself with your branding:
 
 ```json
 {
   "client": {
-    "name": "Acme IT Helpdesk",
+    "name": "Acme Helpdesk",
     "supportContact": "ithelp@acme.example",
     "ticketSystemUrl": "https://acme.freshservice.com/support/tickets/new"
   },
@@ -99,46 +114,53 @@ Deploy with custom branding via `config.json`:
     "ssoProvider": "okta",
     "ssoUrl": "https://acme.okta.com",
     "managedByMdm": true
+  },
+  "problems": {
+    "exclude": ["network.consumer-router-reset"],
+    "custom": [
+      { "id": "acme.crm-relaunch", "title": "Sales CRM frozen" }
+    ]
   }
 }
 ```
 
-Place at `~/.frntzn/config.json` or pass via `FRNTZN_CONFIG=path` environment variable.
+Logo, color, support email, ticket system URL, your apps, your custom problem definitions — all hot-swappable without touching the script. One tool, infinite tenants. An example config showing a healthcare deployment with PHI redaction in the diagnostic bundle lives in [`examples/`](examples/).
 
-See [`examples/`](examples/) for full examples.
+The pitch to your finance team is simple: most of your help desk's tickets are repetitive. If MendOS deflects even 30% of them, the time saved pays for itself in the first month, and your IT pros get to work on real problems instead of clearing the same browser cache for the fiftieth time.
 
-## Verifying download integrity
+## Trust
 
-For every release, we publish a SHA-256 hash:
+This tool runs with administrator privileges. That means it can do real damage if you don't trust it. So I'm not asking you to. I'm asking you to read the code.
+
+- **Open source.** Every line of every script that runs on your machine is visible in this repo, pinned to an exact Git commit tag. No minified blobs, no obfuscated functions, no runtime-fetched binaries you can't inspect.
+- **SHA-256 hashes** for every release are published on the [Releases](https://github.com/PH30N1X-PR1Me/mendos/releases) page.
+- **AMSI stays on.** Windows Defender's anti-malware scanner is never disabled, ever. Every AMSI bypass technique on the internet is a defense-evasion pattern; we use zero of them.
+- **No telemetry by default.** It's opt-in. When opt-in, it sends anonymous event names and OS version. No hostnames, no usernames, no IPs.
+- **No keylogging, no clipboard reading, no credential harvesting.** Ever. Grep the source for `Get-Clipboard`, `SetWindowsHookEx`, `Get-Credential` — zero matches outside actions you explicitly click.
+- **Every change is reversible** via the Undo Last button.
+- **Restore points** are created automatically before any multi-step workflow on Windows.
+- **A 2017 supply-chain attack** on a similar tool (CCleaner) shipped *signed* malware to 2.27 million users. The takeaway: code signing is necessary but not sufficient. Reproducible builds, commit-pinning, and transparent open source matter more. See [`docs/SECURITY.md`](docs/SECURITY.md) for our full security posture.
+
+If MendOS doesn't pass your security review, I want to hear why. Security feedback is the most valuable PR a project like this can get.
+
+## Try it
 
 ```powershell
-# Windows
-$expected = 'abc123...'  # from release page
-$actual = (Get-FileHash 'h3l1os.ps1' -Algorithm SHA256).Hash
-if ($actual -eq $expected) { 'verified' } else { 'TAMPERED' }
+irm 'https://mendos.heliosprima.com/win' | iex
 ```
 
 ```bash
-# macOS
-shasum -a 256 -c h3l1os.sh.sha256
+/bin/bash -c "$(curl -fsSL https://mendos.heliosprima.com/mac)"
 ```
+
+Paste it. See what it does. If your computer's been fighting you, this is the tool that stops the fight.
 
 ## License
 
-MIT for the Light tier code. Ultimate tier features are commercial. Both ship in the same script; the Ultimate features are gated by a license stub that you can read in [`docs/LICENSING.md`](docs/LICENSING.md).
+MIT for the Light tier. See [`docs/LICENSING.md`](docs/LICENSING.md) for how the Ultimate tier gate works and how the freemium model is implemented.
 
-## Roadmap
+Copyright (c) 2026 [FR4NTZ0N](https://github.com/PH30N1X-PR1Me) · A [Helios Prima](https://heliosprima.com) product.
 
-- v1.0 — Windows + Mac, 12-category coverage, freemium stub, audit + undo
-- v1.1 — ITSM integrations, scheduled scans, Spanish localization
-- v2.0 — Microsoft Store distribution, code signing via Azure Trusted Signing
+---
 
-## Contributing
-
-Pull requests welcome. Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md).
-
-## Why this exists
-
-Most IT support tickets are repetitive — DNS flush, restart audio, clear cache, sign in again. MendOS lets people fix those themselves, in seconds, without filing a ticket. IT teams get to focus on the hard stuff. Users get unstuck faster.
-
-Built originally to support Remedy Meds call-center operations. Now generalized.
+**MendOS** — *MEND your Operating System.*
