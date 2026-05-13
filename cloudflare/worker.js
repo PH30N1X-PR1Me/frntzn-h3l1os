@@ -2,9 +2,11 @@
 //  FRNTZN H3L1OS - Cloudflare Worker (hybrid setup)
 //
 //  Hosts on:  frntzn.heliosprima.com
-//  Scripts live on GitHub raw (versioned tags). This Worker is API-only.
 //
 //  Endpoints:
+//    GET  /                         -> redirect to GitHub repo
+//    GET  /win   (/windows, /install.ps1)  -> proxy Windows script
+//    GET  /mac   (/macos, /install.sh)     -> proxy Mac script
 //    GET  /v1/health                -> liveness
 //    POST /v1/license/check         -> tier validation with machine binding
 //    POST /v1/telemetry/event       -> opt-in event sink (anonymous)
@@ -25,6 +27,15 @@ const LICENSE_VALID_DAYS   = 14;
 const KEY_FORMAT           = /^[A-Z0-9-]{8,64}$/;
 const HASH_FORMAT          = /^[a-f0-9]{8,128}$/;
 
+// ----- Release pinning ------------------------------------------------------
+// Bump RELEASE_TAG on every new release. The short-URL endpoints (/win, /mac)
+// proxy GitHub raw at this tag, so users always get the version you blessed.
+const RELEASE_TAG     = 'v1.0.0';
+const GITHUB_REPO     = 'PH30N1X-PR1Me/frntzn-h3l1os';
+const WINDOWS_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/${RELEASE_TAG}/src/windows/h3l1os.ps1`;
+const MAC_RAW_URL     = `https://raw.githubusercontent.com/${GITHUB_REPO}/${RELEASE_TAG}/src/mac/h3l1os.sh`;
+const REPO_URL        = `https://github.com/${GITHUB_REPO}`;
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -34,6 +45,20 @@ export default {
     }
 
     try {
+      // Short-URL install endpoints (curl|bash and irm|iex friendly)
+      if (request.method === 'GET') {
+        if (url.pathname === '/win' || url.pathname === '/windows' || url.pathname === '/install.ps1') {
+          return await proxyScript(WINDOWS_RAW_URL, 'text/plain; charset=utf-8');
+        }
+        if (url.pathname === '/mac' || url.pathname === '/macos' || url.pathname === '/install.sh') {
+          return await proxyScript(MAC_RAW_URL, 'text/plain; charset=utf-8');
+        }
+        if (url.pathname === '/') {
+          return Response.redirect(REPO_URL, 302);
+        }
+      }
+
+      // API endpoints
       if (url.pathname === '/v1/health' && request.method === 'GET') {
         return jsonResponse({ ok: true, ts: new Date().toISOString() });
       }
@@ -227,9 +252,9 @@ function handleVersion() {
   return jsonResponse({
     latest: '1.0.0',
     released: '2026-05-13',
-    windows_url: 'https://raw.githubusercontent.com/PH30N1X-PR1Me/frntzn-h3l1os/v1.0.0/src/windows/h3l1os.ps1',
-    mac_url:     'https://raw.githubusercontent.com/PH30N1X-PR1Me/frntzn-h3l1os/v1.0.0/src/mac/h3l1os.sh',
-    changelog:   'https://github.com/PH30N1X-PR1Me/frntzn-h3l1os/releases',
+    windows_url: 'https://raw.githubusercontent.com/YOUR-USERNAME/frntzn-h3l1os/v1.0.0/src/windows/h3l1os.ps1',
+    mac_url:     'https://raw.githubusercontent.com/YOUR-USERNAME/frntzn-h3l1os/v1.0.0/src/mac/h3l1os.sh',
+    changelog:   'https://github.com/YOUR-USERNAME/frntzn-h3l1os/releases',
     min_supported: '1.0.0'
   });
 }
@@ -256,4 +281,33 @@ function jsonResponse(data, status = 200) {
       ...corsHeaders()
     }
   });
+}
+
+// Proxy a script from GitHub raw, with edge caching for repeat fetches.
+// Users hit our clean URL; we relay GitHub content with 5-min Cloudflare cache.
+async function proxyScript(githubUrl, contentType) {
+  try {
+    const resp = await fetch(githubUrl, {
+      cf: { cacheTtl: 300, cacheEverything: true }
+    });
+    if (!resp.ok) {
+      return new Response(
+        `# Failed to fetch script (HTTP ${resp.status})\n# Try directly:\n# ${githubUrl}\n`,
+        { status: 502, headers: { 'Content-Type': 'text/plain' } }
+      );
+    }
+    return new Response(resp.body, {
+      status: 200,
+      headers: {
+        'Content-Type':  contentType,
+        'Cache-Control': 'public, max-age=300',
+        'X-Source':      githubUrl
+      }
+    });
+  } catch (err) {
+    return new Response(
+      `# Network error fetching script\n# Try directly:\n# ${githubUrl}\n`,
+      { status: 502, headers: { 'Content-Type': 'text/plain' } }
+    );
+  }
 }
