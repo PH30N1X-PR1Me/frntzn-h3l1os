@@ -1,7 +1,7 @@
 // ============================================================================
 //  FRNTZN H3L1OS - Cloudflare Worker (hybrid setup)
 //
-//  Hosts on:  api.heliosprima.com
+//  Hosts on:  frntzn.heliosprima.com
 //  Scripts live on GitHub raw (versioned tags). This Worker is API-only.
 //
 //  Endpoints:
